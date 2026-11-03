@@ -1,0 +1,77 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#2b2420}
+  #stage{text-shadow:0 2px 24px rgba(40,20,10,.35);position:relative;width:1080px;height:1920px;overflow:hidden;font-family:'Cormorant Garamond',Georgia,serif;color:#fbf5ec}
+  #bg{position:absolute;inset:0}
+  #orb{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%);
+       background:radial-gradient(circle,rgba(255,226,190,.55) 0%,rgba(255,206,160,.18) 45%,rgba(255,200,150,0) 70%)}
+  .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:2px solid rgba(251,245,236,.22);transform:translate(-50%,-50%)}
+  .p{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,236,210,.8);filter:blur(1px)}
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 110px;box-sizing:border-box;opacity:0}
+  .big{font-size:104px;line-height:1.08;font-weight:500;letter-spacing:-.5px}
+  .big em{font-style:italic;color:#ffd9b0}
+  .kicker{font-family:Inter,sans-serif;font-size:30px;letter-spacing:9px;text-transform:uppercase;color:#f3dcc2;margin-bottom:44px;font-weight:500}
+  .list{font-size:68px;line-height:1.5;font-style:italic}
+  .list span{display:block}
+  .cta{font-family:Inter,sans-serif;font-size:40px;font-weight:600;margin-top:70px;padding:30px 54px;border:2px solid #fbf5ec;border-radius:999px;letter-spacing:1px}
+  .small{font-family:Inter,sans-serif;font-size:38px;color:#f3dcc2;margin-top:44px;letter-spacing:2px}
+  #brand{position:absolute;bottom:110px;left:0;right:0;text-align:center;font-family:Inter,sans-serif;font-size:28px;letter-spacing:8px;text-transform:uppercase;color:rgba(251,245,236,.75)}
+  #bar{position:absolute;top:80px;left:110px;height:4px;background:rgba(251,245,236,.8);border-radius:2px}
+  #bartrack{position:absolute;top:80px;left:110px;right:110px;height:4px;background:rgba(251,245,236,.2);border-radius:2px}
+</style></head>
+<body><div id="stage">
+  <div id="bg"></div>
+  <div id="orb"></div>
+  <div class="ring" id="r1"></div><div class="ring" id="r2"></div>
+  <div id="particles"></div>
+  <div id="bartrack"></div><div id="bar"></div>
+
+  <div class="scene" id="s0"><div class="big">I used to think rest was something I'd <em>earn</em>…</div></div>
+  <div class="scene" id="s1"><div class="big">…after the next deadline.<br>The next promotion.<br><em>The next year.</em></div></div>
+  <div class="scene" id="s2"><div class="big">Then my nervous system sent the <em>invoice.</em></div></div>
+  <div class="scene" id="s3"><div class="kicker">Introducing</div><div class="big">The CorporateYogi <em>Retreat</em></div><div class="small">for high-achieving women who are running on empty</div></div>
+  <div class="scene" id="s4"><div class="list"><span>Yin yoga at sunrise</span><span>Sound healing</span><span>Nervous system reset</span><span>Real conversations</span><span>Space to hear yourself think</span></div></div>
+  <div class="scene" id="s5"><div class="big">Arrive as the high achiever.<br><em>Leave as yourself.</em></div></div>
+  <div class="scene" id="s6"><div class="kicker">Small group · Limited spots</div><div class="big">Stop surviving.<br><em>Start living.</em></div><div class="cta">Comment “RETREAT” for details</div><div class="small">corporateyogi.online</div></div>
+
+  <div id="brand">CorporateYogi</div>
+</div>
+<script>
+const DUR = 26;
+// scene windows [start, end]
+const S = [[0.3,3.6],[3.6,7.2],[7.2,10.6],[10.6,14.6],[14.6,19.2],[19.2,22.2],[22.2,26.0]];
+const parts = [];
+const pc = document.getElementById('particles');
+let seed = 7; const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+for(let i=0;i<38;i++){const d=document.createElement('div');d.className='p';pc.appendChild(d);
+  parts.push({el:d,x:rnd()*1080,y:rnd()*1920,s:.5+rnd()*1.6,sp:12+rnd()*30,ph:rnd()*6.28});}
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function mix(a,b,t){return a.map((v,i)=>Math.round(v+(b[i]-v)*t));}
+// palette shifts: dusk plum -> terracotta -> sage -> warm sand
+const pal=[[[58,38,52],[140,74,62]],[[92,48,44],[196,112,78]],[[52,72,62],[150,140,98]],[[86,58,46],[210,150,104]]];
+window.render = function(t){
+  const k = (t/DUR)*(pal.length-1); const i=Math.min(Math.floor(k),pal.length-2); const f=ease(k-i);
+  const top=mix(pal[i][0],pal[i+1][0],f), bot=mix(pal[i][1],pal[i+1][1],f);
+  document.getElementById('bg').style.background=`linear-gradient(180deg,rgb(${top}) 0%,rgb(${bot}) 100%)`;
+  // breathing orb: 4s inhale/exhale cycle
+  const br = .5-.5*Math.cos(t*2*Math.PI/6);
+  const o=document.getElementById('orb'); const sz=900+br*320; o.style.width=o.style.height=sz+'px';
+  ['r1','r2'].forEach((id,j)=>{const r=document.getElementById(id);const s=(560+j*260)+br*(140+j*80);r.style.width=r.style.height=s+'px';r.style.opacity=.6-j*.25;});
+  parts.forEach(p=>{const y=((p.y - t*p.sp)%1920+1920)%1920;const x=p.x+Math.sin(t*.6+p.ph)*30;
+    p.el.style.transform=`translate(${x}px,${y}px) scale(${p.s})`;p.el.style.opacity=.25+.45*(.5+.5*Math.sin(t*1.3+p.ph));});
+  S.forEach(([a,b],n)=>{const el=document.getElementById('s'+n);const fi=0.7,fo=0.55;
+    let op=0; if(t>=a&&t<=b){op=Math.min(clamp((t-a)/fi,0,1), n===S.length-1?1:clamp((b-t)/fo,0,1));}
+    const e=ease(op); el.style.opacity=e;
+    const prog=clamp((t-a)/(b-a),0,1);
+    el.style.transform=`translateY(${(1-e)*40}px) scale(${1+prog*0.035})`;
+    el.style.filter=`blur(${(1-e)*8}px)`;
+    if(n===4){[...el.querySelectorAll('span')].forEach((sp,q)=>{const st=a+0.3+q*0.6;const v=ease(clamp((t-st)/0.6,0,1));sp.style.opacity=v;sp.style.transform=`translateY(${(1-v)*24}px)`;});}
+  });
+  document.getElementById('bar').style.width=(860*clamp(t/DUR,0,1))+'px';
+  document.getElementById('brand').style.opacity = t>22.2?0:1;
+};
+window.render(0);
+</script></body></html>
