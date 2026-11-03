@@ -48,7 +48,7 @@
 
 ## Platform
 
-**Recommended: Skool** (free group with a built-in calendar, classroom for replays and the Tool Drop library, and a leaderboard to encourage engagement). Zoom for the live calls, with replays posted within 24 hours.
+**Recommended: Skool Hobby plan** ($9/month after a 14-day free trial, or about $7.50/month billed yearly). Members join free. It includes a built-in calendar, a classroom for replays and the Tool Drop library, and a leaderboard to encourage engagement. Hobby's 10% transaction fee only applies to paid memberships, so it doesn't affect a free community. Upgrade to Pro ($99/month) only if you later sell Fearless Scale inside Skool. Use Zoom for the live calls (the free plan cuts group calls at 40 minutes, so a paid plan is needed for 60) and post replays within 24 hours.
 
 *Alternatives:* a Facebook Group (easy to reach people, but more distractions) or Circle (polished, but paid).
 
